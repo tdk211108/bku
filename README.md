@@ -150,13 +150,12 @@ MIT License - được phép sử dụng, sửa đổi và phân phối
 ## 👥 Tác Giả
 
 - **Developer**: dK
-- **Version**: 1.0
+- **Version**: 9.0
 - **Last Update**: 2026
 
 ## 📞 Liên Hệ
 
-- BKU: https://www.hcmut.edu.vn/
-- Email: admissions@hcmut.edu.vn
+Email: trinhduykhoa2008@gmail.com
 
 ---
 
