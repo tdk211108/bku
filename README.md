@@ -1,6 +1,4 @@
-# 🎓 BKU Admission System
-
-Hệ thống xét tuyển công bằng cho Đại học Bách Khoa TP.HCM. Giúp học sinh tính toán điểm xét tuyển theo các phương thức khác nhau với giao diện hiện đại.
+# 🎓 Chào mừng đến với tính điểm Bách Khoa [Knjr]
 
 ![BKU Logo](https://img.shields.io/badge/BKU%20TP.HCM-Education-blue?style=flat-square&logo=education)
 ![Version](https://img.shields.io/badge/version-1.0.0-brightgreen?style=flat-square)
