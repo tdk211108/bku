@@ -1,0 +1,27 @@
+{
+  "name": "bku-admission-system",
+  "version": "1.0.0",
+  "description": "Hệ thống xét tuyển công bằng cho Đại học Bách Khoa TP.HCM",
+  "main": "index.html",
+  "author": "dK",
+  "license": "MIT",
+  "keywords": [
+    "bku",
+    "admission",
+    "education",
+    "tuyển-sinh",
+    "xét-tuyến",
+    "calculator"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/bku-admission.git"
+  },
+  "scripts": {
+    "serve": "python3 -m http.server 8000",
+    "start": "python3 -m http.server 8000"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

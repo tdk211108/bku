@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Knjr] Tính điểm BK 9.0</title>
+    <link rel="icon" href="static/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- BKU Logo -->
+        <div class="rotating-logo">
+            <img src="static/favicon.ico" alt="BKU Logo" class="logo-img">
+        </div>
+
+        <!-- Mini Header -->
+        <div class="mini-header">
+            <div class="header-content">
+                <span class="title-text">XÉT TUYỂN BÁCH KHOA TP.HCM</span>
+            </div>
+        </div>
+
+        <!-- Validation Error Container -->
+        <div id="error-container" class="error-container" style="display: none;"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Left: Input Methods -->
+            <section class="col col-input">
+                <div class="card compact">
+                    <h3 class="card-title">Điểm năng lực</h3>
+                    
+                    <div class="method-selector">
+                        <label class="radio-compact">
+                            <input type="radio" name="method" value="dgnl" checked>
+                            <span>ĐGNL (0-1200)</span>
+                        </label>
+                        <label class="radio-compact">
+                            <input type="radio" name="method" value="sat">
+                            <span>SAT (1200-1600)</span>
+                        </label>
+                    </div>
+
+                    <!-- ĐGNL Inputs -->
+                    <div id="dgnl-form" class="form-group-section active">
+                        <div class="form-compact">
+                            <label>Tiếng Việt</label>
+                            <input type="number" id="tv" min="0" max="300" step="0.1" placeholder="0-300">
+                        </div>
+                        <div class="form-compact">
+                            <label>Tiếng Anh</label>
+                            <input type="number" id="ta" min="0" max="300" step="0.1" placeholder="0-300">
+                        </div>
+                        <div class="form-compact">
+                            <label>Toán</label>
+                            <input type="number" id="toan-dgnl" min="0" max="300" step="0.1" placeholder="0-300">
+                        </div>
+                        <div class="form-compact">
+                            <label>Tư duy khoa học</label>
+                            <input type="number" id="td" min="0" max="300" step="0.1" placeholder="0-300">
+                        </div>
+                    </div>
+
+                    <!-- SAT Inputs -->
+                    <div id="sat-form" class="form-group-section">
+                        <div class="form-compact">
+                            <label>Điểm SAT</label>
+                            <input type="number" id="sat-score" min="1200" max="1600" step="10" placeholder="1200-1600">
+                        </div>
+                    </div>
+
+                    <!-- IELTS -->
+                    <div class="divider"></div>
+                    <h3 class="card-title">IELTS</h3>
+                    
+                    <div class="method-selector">
+                        <label class="radio-compact">
+                            <input type="radio" name="ielts-option" value="yes">
+                            <span>Có</span>
+                        </label>
+                        <label class="radio-compact">
+                            <input type="radio" name="ielts-option" value="no" checked>
+                            <span>Không</span>
+                        </label>
+                    </div>
+
+                    <div id="ielts-input" class="form-compact" style="display: none;">
+                        <label>IELTS</label>
+                        <input type="number" id="ielts" min="6" max="9" step="0.5" placeholder="6.0-9.0">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Middle: TN THPT & HB -->
+            <section class="col col-middle">
+                <!-- TN THPT -->
+                <div class="card compact">
+                    <h3 class="card-title">Điểm thi THPT</h3>
+                    
+                    <div class="form-compact">
+                        <label>Toán</label>
+                        <input type="number" id="toan-tn" min="0" max="10" step="0.1" placeholder="0-10">
+                    </div>
+                    <div class="form-compact">
+                        <label>Lý</label>
+                        <input type="number" id="ly-tn" min="0" max="10" step="0.1" placeholder="0-10">
+                    </div>
+                    <div class="form-compact">
+                        <label>Anh</label>
+                        <input type="number" id="anh-tn" min="0" max="10" step="0.1" placeholder="0-10" disabled>
+                    </div>
+                </div>
+
+                <!-- Học Bạ -->
+                <div class="card compact">
+                    <h3 class="card-title">Điểm trung bình học bạ</h3>
+                    
+                    <div class="subject-compact">
+                        <span class="subject-abbr">Toán</span>
+                        <input type="number" id="tb-toan-10" min="0" max="10" step="0.1" placeholder="10">
+                        <input type="number" id="tb-toan-11" min="0" max="10" step="0.1" placeholder="11">
+                        <input type="number" id="tb-toan-12" min="0" max="10" step="0.1" placeholder="12">
+                    </div>
+
+                    <div class="subject-compact">
+                        <span class="subject-abbr">Lý</span>
+                        <input type="number" id="tb-ly-10" min="0" max="10" step="0.1" placeholder="10">
+                        <input type="number" id="tb-ly-11" min="0" max="10" step="0.1" placeholder="11">
+                        <input type="number" id="tb-ly-12" min="0" max="10" step="0.1" placeholder="12">
+                    </div>
+
+                    <div class="subject-compact">
+                        <span class="subject-abbr">Anh</span>
+                        <input type="number" id="tb-anh-10" min="0" max="10" step="0.1" placeholder="10" disabled>
+                        <input type="number" id="tb-anh-11" min="0" max="10" step="0.1" placeholder="11" disabled>
+                        <input type="number" id="tb-anh-12" min="0" max="10" step="0.1" placeholder="12" disabled>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right: Results -->
+            <section class="col col-results">
+                <div class="card compact">
+                    <h3 class="card-title">Điểm XT (sử dụng ĐGNL/SAT)</h3>
+                    
+                    <div class="result-item">
+                        <span>Năng lực (70%)</span>
+                        <span class="result-value" id="result-nl-m1">—</span>
+                    </div>
+                    <div class="result-item">
+                        <span>THPT (20%)</span>
+                        <span class="result-value" id="result-tn-m1">—</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Học bạ (10%)</span>
+                        <span class="result-value" id="result-hb-m1">—</span>
+                    </div>
+                    <div class="result-total">
+                        <span>Tổng điểm</span>
+                        <span class="result-value-total" id="result-total-m1">—</span>
+                    </div>
+                </div>
+
+                <div class="card compact">
+                    <h3 class="card-title">Điểm XT (chỉ sử dụng điểm thi THPT)</h3>
+                    
+                    <div class="result-item">
+                        <span>Năng lực (70%)</span>
+                        <span class="result-value" id="result-nl-m3">—</span>
+                    </div>
+                    <div class="result-item">
+                        <span>THPT (20%)</span>
+                        <span class="result-value" id="result-tn-m3">—</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Học bạ (10%)</span>
+                        <span class="result-value" id="result-hb-m3">—</span>
+                    </div>
+                    <div class="result-total">
+                        <span>Tổng điểm</span>
+                        <span class="result-value-total" id="result-total-m3">—</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Final Score Bar -->
+        <section class="final-bar">
+            <div class="final-content">
+                <div class="score-info">
+                    <span class="score-label">ĐIỂM CUỐI CÙNG</span>
+                    <span class="score-value-final" id="final-score">—</span>
+                </div>
+                <div class="score-bar">
+                    <div class="score-fill" id="score-fill"></div>
+                </div>
+                <button class="btn-reset" onclick="resetForm()">XÓA</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="static/script.js"></script>
+</body>
+</html>
