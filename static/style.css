@@ -25,6 +25,8 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -47,11 +49,9 @@ body {
 
 /* ==================== ROTATING LOGO ==================== */
 .rotating-logo {
-    position: fixed;
-    top: 12px;
-    left: 12px;
     width: 48px;
     height: 48px;
+    flex-shrink: 0;
     z-index: 1000;
     animation: spin-continuous 8s linear infinite;
     transform-origin: center;
@@ -87,6 +87,10 @@ body {
     border-bottom: 2px solid rgba(0, 0, 0, 0.4);
     flex-shrink: 0;
     animation: slideDown 0.6s ease-out;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 @keyframes slideDown {
@@ -144,6 +148,7 @@ body {
     padding: 12px;
     flex: 1;
     overflow: hidden;
+    transform: translateZ(0);
 }
 
 .col {
@@ -152,6 +157,7 @@ body {
     gap: 12px;
     overflow-y: auto;
     animation: fadeIn 0.7s ease-out;
+    contain: layout;
 }
 
 @keyframes fadeIn {
@@ -179,6 +185,8 @@ body {
     flex-shrink: 0;
     position: relative;
     overflow: hidden;
+    contain: layout style paint;
+    will-change: transform;
 }
 
 .card::before {
@@ -208,7 +216,6 @@ body {
     box-shadow: 
         0 0 40px rgba(255, 255, 255, 0.25),
         inset 0 0 20px rgba(255, 255, 255, 0.08);
-    transform: translateY(-2px);
 }
 
 .card.compact {
@@ -266,7 +273,6 @@ body {
     box-shadow: 
         0 0 20px rgba(255, 255, 255, 0.3),
         inset 0 0 12px rgba(255, 255, 255, 0.08);
-    transform: scale(1.01);
     background: rgba(15, 15, 15, 0.98);
 }
 
@@ -564,12 +570,11 @@ body {
     box-shadow: 
         0 0 25px rgba(255, 255, 255, 0.3),
         inset 0 0 10px rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
     border-color: rgba(255, 255, 255, 0.5);
 }
 
 .btn-reset:active {
-    transform: translateY(0);
+    opacity: 0.9;
 }
 
 /* ==================== SCROLLBAR ==================== */
@@ -866,6 +871,7 @@ body {
 
     .score-value-final {
         font-size: 28px;
+        will-change: auto;
     }
 
     .rotating-logo {
@@ -873,5 +879,36 @@ body {
         height: 32px;
         top: 8px;
         left: 8px;
+    }
+}
+
+/* ==================== MOBILE SCROLL FIX ==================== */
+@media (max-width: 768px) {
+    html, body {
+        overflow: visible;
+        height: auto;
+    }
+
+    .container {
+        overflow: visible;
+        height: auto;
+        flex-direction: column;
+    }
+
+    .main-content {
+        overflow-y: visible;
+        flex: none;
+    }
+
+    .col {
+        overflow-y: visible;
+    }
+
+    .card {
+        will-change: auto;
+    }
+
+    .form-compact input {
+        will-change: border-color, box-shadow;
     }
 }
