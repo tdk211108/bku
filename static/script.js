@@ -23,6 +23,13 @@ const STORAGE_KEYS = {
     IELTS_OPTION: 'ielts_option'
 };
 
+// ==================== DEBOUNCE FUNCTION ====================
+let debounceTimer;
+function debounce(callback, delay = 150) {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(callback, delay);
+}
+
 // ==================== INITIALIZATION ====================
 document.addEventListener('DOMContentLoaded', function() {
     initializeEventListeners();
@@ -45,7 +52,9 @@ function initializeEventListeners() {
     // All inputs
     const numberInputs = document.querySelectorAll('input[type="number"]');
     numberInputs.forEach((input, index) => {
-        input.addEventListener('input', calculateResults);
+        input.addEventListener('input', function() {
+            debounce(calculateResults, 150);
+        });
         input.addEventListener('input', saveToLocalStorage);
         
         // Enter key to move to next input
@@ -76,7 +85,7 @@ function toggleMethod(e) {
     document.getElementById('dgnl-form').classList.toggle('active', method === 'dgnl');
     document.getElementById('sat-form').classList.toggle('active', method === 'sat');
     
-    calculateResults();
+    debounce(calculateResults, 150);
 }
 
 function toggleIELTS(e) {
@@ -91,7 +100,7 @@ function toggleIELTS(e) {
         document.querySelectorAll('[id^="tb-anh-"]').forEach(el => el.disabled = false);
     }
     
-    calculateResults();
+    debounce(calculateResults, 150);
 }
 
 // ==================== VALIDATION FUNCTIONS ====================
