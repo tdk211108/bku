@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Knjr] Điểm chuẩn tuyển sinh HCMUT 2025</title>
+    <link rel="icon" href="static/favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background-color: #f5f5f5;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-display {
+            font-size: 28px;
+            font-weight: bold;
+            color: #210;
+            margin-bottom: 10px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #ddd;
+            border: 1px solid #999;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #ccc;
+        }
+
+        .filter-and-table {
+            display: flex;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .filter-panel {
+            flex: 0 0 200px;
+        }
+
+        .filter-panel-sticky {
+            position: sticky;
+            top: 40px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .radio-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .radio-option {
+            margin-left: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .radio-option input {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .radio-option label {
+            display: inline;
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .table-wrapper {
+            flex: 1;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 8px 12px;
+            font-size: 13px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        th {
+            background-color: hsl(210, 75%, 60%);
+            color: white;
+            font-weight: bold;
+        }
+
+        td:nth-child(2) {
+            text-align: left;
+            min-width: 150px;
+        }
+
+        .section-header {
+            background-color: hsl(210, 75%, 60%);
+            color: white;
+            font-weight: bold;
+            text-align: center !important;
+        }
+
+        .program-name {
+            color: hsl(210, 75%, 60%);
+            font-weight: bold;
+        }
+
+        .new-program {
+            color: hsl(30, 75%, 60%);
+            font-weight: bold;
+        }
+
+        .highlight {
+            color: hsl(0, 75%, 60%);
+            font-weight: bold;
+        }
+
+        i {
+            font-size: 12px;
+            color: #555;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .passed {
+            background-color: rgba(144, 238, 144, 0.25) !important;
+        }
+
+        .failed {
+            background-color: rgba(255, 107, 107, 0.25) !important;
+        }
+
+        .no-score {
+            background-color: rgba(255, 235, 153, 0.3) !important;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 1200px) {
+            .filter-and-table {
+                flex-direction: column;
+            }
+
+            .filter-panel {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<a href="index.html" class="back-button">← Quay lại</a>
+
+<div class="header">
+    <div class="score-display" id="score-info"></div>
+</div>
+
+<div class="filter-and-table">
+    <div class="filter-panel">
+        <div class="filter-panel-sticky">
+            <div class="radio-group">
+                <label>Lọc hiển thị:</label>
+                <div class="radio-option">
+                    <input type="radio" id="showAll" name="filter" value="all" checked>
+                    <label for="showAll">Tất cả</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="showPassed" name="filter" value="passed">
+                    <label for="showPassed">Đã đậu (xanh lá)</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="showFailed" name="filter" value="failed">
+                    <label for="showFailed">Chưa đậu (đỏ)</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">Mã<br>tuyển sinh</th>
+                    <th rowspan="2">Tên ngành</th>
+                    <th rowspan="2">Chỉ tiêu<br>2026</th>
+                    <th>Điểm chuẩn năm 2025</th>
+                </tr>
+                <tr>
+                    <th>Xét tuyển Tổng hợp</th>
+                </tr>
+            </thead>
+            <tbody>
+            <!-- CHƯƠNG TRÌNH TIÊU CHUẨN -->
+            <tr>
+                <td colspan="4" class="section-header">CHƯƠNG TRÌNH TIÊU CHUẨN</td>
+            </tr>
+            <tr>
+                <td>106</td>
+                <td><span class="program-name">Khoa học Máy tính</span><i>(Chuyên ngành: Khoa học Máy tính, Công nghệ Dữ liệu và Dữ liệu lớn, An ninh Hệ thống và Mạng, Trí tuệ Nhân tạo, Công nghệ Phần mềm)</i></td>
+                <td>240</td>
+                <td>85.41</td>
+            </tr>
+            <tr>
+                <td>107</td>
+                <td><span class="program-name">Kỹ thuật Máy tính</span><i>(Chuyên ngành: Kỹ thuật Máy tính, Hệ thống tính toán Nâng cao, Internet Vạn vật, Thiết kế Vi mạch số)</i></td>
+                <td>100</td>
+                <td>82.91</td>
+            </tr>
+            <tr>
+                <td>108</td>
+                <td><span class="program-name">Nhóm ngành Điện - Điện tử - Viễn Thông - Tự động hoá - Thiết kế Vi mạch</span><i>(Ngành: Kỹ thuật Điện; Kỹ thuật Điện tử - Viễn thông; Kỹ thuật Điều khiển và Tự động hóa; Thiết kế Vi mạch)</i></td>
+                <td>670</td>
+                <td>80.77</td>
+            </tr>
+            <tr>
+                <td>109</td>
+                <td><span class="program-name">Kỹ thuật Cơ khí</span></td>
+                <td>300</td>
+                <td>75.43</td>
+            </tr>
+            <tr>
+                <td>110</td>
+                <td><span class="program-name">Kỹ thuật Cơ Điện tử</span></td>
+                <td>105</td>
+                <td>81.82</td>
+            </tr>
+            <tr>
+                <td>112</td>
+                <td><span class="program-name">Nhóm ngành Dệt - May</span><i>(Ngành/Chuyên ngành: Công nghệ Dệt, May/Công nghệ May - Thời trang; Kỹ thuật Dệt/Công nghệ Sợi dệt)</i></td>
+                <td>90</td>
+                <td>60.75</td>
+            </tr>
+            <tr>
+                <td>114</td>
+                <td><span class="program-name">Nhóm ngành Hóa - Thực phẩm - Sinh học</span><i>(Ngành/Chuyên ngành: Công nghệ Thực phẩm; Công nghệ Sinh học; Kỹ thuật Hóa học/Kỹ thuật Hóa học, Công nghệ Hóa dược, Công nghệ Mỹ phẩm)</i></td>
+                <td>330</td>
+                <td>75.43</td>
+            </tr>
+            <tr>
+                <td>115</td>
+                <td><span class="program-name">Nhóm ngành Xây dựng và Quản lý Dự án Xây dựng</span><i>(Ngành/Chuyên ngành: KTXD Công trình Giao thông, <span class="highlight">Đường sắt Tốc độ cao & Đường sắt Đô thị</span>; KTXD Công trình Thủy; KTXD Công trình Biển; Kỹ thuật Cơ sở Hạ tầng; Kỹ thuật Trắc địa - Bản đồ; Công nghệ Kỹ thuật Vật liệu Xây dựng; Kỹ thuật Xây dựng/Kỹ thuật Xây dựng, Quản lý Dự án Xây dựng)</i></td>
+                <td>470</td>
+                <td>55.05</td>
+            </tr>
+            <tr>
+                <td>117</td>
+                <td><span class="program-name">Kiến Trúc</span><i>(Chuyên ngành: Kiến trúc, Kiến trúc Cảnh quan)</i></td>
+                <td>90</td>
+                <td>67.42</td>
+            </tr>
+            <tr>
+                <td>123</td>
+                <td><span class="program-name">Quản lý Công nghiệp</span><i>(Chuyên ngành: Quản lý Công nghiệp, Quản lý Chuỗi Cung ứng & Vận hành)</i></td>
+                <td>80</td>
+                <td>75.98</td>
+            </tr>
+            <tr>
+                <td>125</td>
+                <td><span class="program-name">Nhóm ngành Tài nguyên và Môi trường</span><i>(Ngành/Chuyên ngành: Quản lý Tài nguyên và Môi trường, <span class="highlight">Môi trường An toàn và Sức khỏe</span> (dự kiến); Kỹ thuật Môi trường)</i></td>
+                <td>120</td>
+                <td>60.93</td>
+            </tr>
+            <tr>
+                <td>128</td>
+                <td><span class="program-name">Nhóm ngành Logistics và Hệ thống Công nghiệp</span><i>(Ngành: Logistics và Quản lý Chuỗi Cung ứng; Kỹ thuật Hệ thống Công nghiệp)</i></td>
+                <td>70</td>
+                <td>80.52</td>
+            </tr>
+            <tr>
+                <td>129</td>
+                <td><span class="program-name">Kỹ thuật Vật liệu</span><i>(Chuyên ngành: Kỹ thuật Vật liệu, Kỹ thuật Vật liệu Kim loại, Kỹ thuật Vật liệu Năng lượng, Kỹ thuật Vật liệu Polymer, Kỹ thuật Vật liệu Silicat)</i></td>
+                <td>125</td>
+                <td>71.10</td>
+            </tr>
+            <tr>
+                <td>137</td>
+                <td><span class="program-name">Vật lý Kỹ thuật</span><i>(Chuyên ngành: Kỹ thuật Y sinh, Vật lý Tính toán, Vật lý Kỹ thuật)</i></td>
+                <td>40</td>
+                <td>76.61</td>
+            </tr>
+            <tr>
+                <td>138</td>
+                <td><span class="program-name">Cơ Kỹ thuật</span></td>
+                <td>40</td>
+                <td>75.98</td>
+            </tr>
+            <tr>
+                <td>140</td>
+                <td><span class="program-name">Kỹ thuật Nhiệt</span><i>(Chuyên ngành: Kỹ thuật Nhiệt lạnh; Kỹ thuật Nhiệt)</i></td>
+                <td>80</td>
+                <td>73.50</td>
+            </tr>
+            <tr>
+                <td>141</td>
+                <td><span class="program-name">Bảo dưỡng Công nghiệp</span></td>
+                <td>110</td>
+                <td>65.59</td>
+            </tr>
+            <tr>
+                <td>142</td>
+                <td><span class="program-name">Kỹ thuật Ô tô</span></td>
+                <td>40</td>
+                <td>76.34</td>
+            </tr>
+            <tr>
+                <td>145</td>
+                <td><span class="program-name">(Song ngành) Tàu thủy - Hàng không</span><i>(Ngành: Kỹ thuật Tàu thủy, Kỹ thuật Hàng không)</i></td>
+                <td>40</td>
+                <td>76.63</td>
+            </tr>
+            <tr>
+                <td>146</td>
+                <td><span class="program-name">Khoa học Dữ liệu</span></td>
+                <td>30</td>
+                <td>83.85</td>
+            </tr>
+            <tr>
+                <td>147</td>
+                <td><span class="program-name">Địa Kỹ thuật Xây dựng</span></td>
+                <td>60</td>
+                <td>55.06</td>
+            </tr>
+            <tr>
+                <td>148</td>
+                <td><span class="program-name">Kinh tế Xây dựng</span></td>
+                <td>120</td>
+                <td>55.72</td>
+            </tr>
+            <tr>
+                <td>150</td>
+                <td><span class="new-program">(Ngành mới) </span><span class="highlight">Kỹ thuật Dầu khí</span></td>
+                <td>70</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>151</td>
+                <td><span class="new-program">(Ngành mới) </span><span class="highlight">Kỹ thuật Địa chất</span></td>
+                <td>30</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>152</td>
+                <td><span class="new-program">(Ngành mới) </span><span class="highlight">Kỹ thuật Đường sắt</span></td>
+                <td>40</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>153</td>
+                <td><span class="program-name">Quản trị Kinh doanh</span></td>
+                <td>40</td>
+                <td>71.24</td>
+            </tr>
+            <tr>
+                <td>155</td>
+                <td><span class="new-program">(Ngành mới) </span><span class="highlight">Chuyên ngành Kinh tế Tuần hoàn</span><i>(Chuyên ngành của ngành Kinh tế Tài nguyên Thiên nhiên)</i></td>
+                <td>40</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>156</td>
+                <td><span class="new-program">(Ngành mới) </span><span class="highlight">Kỹ thuật Hạt nhân</span></td>
+                <td>30</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>159</td>
+                <td><span class="new-program">(Ngành mới) </span><span class="highlight">Kỹ thuật Bán dẫn</span></td>
+                <td>40</td>
+                <td>-</td>
+            </tr>
+
+            <!-- CHƯƠNG TRÌNH TIÊN TIẾN -->
+            <tr>
+                <td colspan="4" class="section-header">CHƯƠNG TRÌNH TIÊN TIẾN (GIẢNG DẠY BẰNG TIẾNG ANH)</td>
+            </tr>
+            <tr>
+                <td>208</td>
+                <td><span class="program-name">Kỹ Thuật Điện - Điện Tử</span><i>(Chuyên ngành: Vi mạch - Hệ thống Phần cứng, Hệ thống Năng lượng, Kỹ thuật Điều khiển & Tự động hoá, Hệ thống Viễn thông)</i></td>
+                <td>150</td>
+                <td>79.50</td>
+            </tr>
+
+            <!-- CHƯƠNG TRÌNH DẠY VÀ HỌC BẰNG TIẾNG ANH -->
+            <tr>
+                <td colspan="4" class="section-header">CHƯƠNG TRÌNH DẠY VÀ HỌC BẰNG TIẾNG ANH</td>
+            </tr>
+            <tr>
+                <td>206</td>
+                <td><span class="program-name">Khoa học Máy tính</span><i>(Chuyên ngành: Khoa học Máy tính, Công nghệ Dữ liệu và Dữ liệu lớn, An ninh Hệ thống và Mạng, Trí tuệ Nhân tạo, Công nghệ Phần mềm)</i></td>
+                <td>130</td>
+                <td>83.74</td>
+            </tr>
+            <tr>
+                <td>207</td>
+                <td><span class="program-name">Kỹ thuật Máy tính</span><i>(Chuyên ngành: Kỹ thuật Máy tính, Hệ thống Tính toán Nâng cao, Internet Vạn vật, Thiết kế Vi mạch số)</i></td>
+                <td>80</td>
+                <td>78.66</td>
+            </tr>
+            <tr>
+                <td>209</td>
+                <td><span class="program-name">Kỹ thuật Cơ khí</span></td>
+                <td>50</td>
+                <td>74.30</td>
+            </tr>
+            <tr>
+                <td>210</td>
+                <td><span class="program-name">Kỹ Thuật Cơ Điện tử</span></td>
+                <td>50</td>
+                <td>78.44</td>
+            </tr>
+            <tr>
+                <td>211</td>
+                <td><span class="program-name">Chuyên ngành Kỹ thuật Robot</span><i>(Chuyên ngành của ngành Kỹ thuật Cơ Điện tử)</i></td>
+                <td>50</td>
+                <td>73.89</td>
+            </tr>
+            <tr>
+                <td>214</td>
+                <td><span class="program-name">Kỹ thuật Hóa học</span><i>(Chuyên ngành: Kỹ thuật Hóa học, Công nghệ Hóa dược, Công nghệ Mỹ phẩm)</i></td>
+                <td>150</td>
+                <td>63.30</td>
+            </tr>
+            <tr>
+                <td>215</td>
+                <td><span class="program-name">Nhóm ngành Quản lý Dự án Xây dựng và Kỹ thuật Xây dựng</span><i>(Ngành: Kỹ thuật Xây dựng, Quản lý Dự án Xây dựng; KTXD Công trình Giao thông, <span class="highlight">Đường sắt Tốc độ cao & Đường sắt Đô thị</span>)</i></td>
+                <td>120</td>
+                <td>56.20</td>
+            </tr>
+            <tr>
+                <td>217</td>
+                <td><span class="program-name">Chuyên ngành Kiến trúc Cảnh quan</span><i>(Chuyên ngành của ngành Kiến trúc)</i></td>
+                <td>45</td>
+                <td>55.45</td>
+            </tr>
+            <tr>
+                <td>218</td>
+                <td><span class="program-name">Công nghệ Sinh học</span></td>
+                <td>40</td>
+                <td>66.13</td>
+            </tr>
+            <tr>
+                <td>219</td>
+                <td><span class="program-name">Công nghệ Thực phẩm</span></td>
+                <td>40</td>
+                <td>59.21</td>
+            </tr>
+            <tr>
+                <td>220</td>
+                <td><span class="program-name">Kỹ thuật Dầu khí</span></td>
+                <td>30</td>
+                <td>60.25</td>
+            </tr>
+            <tr>
+                <td>223</td>
+                <td><span class="program-name">Quản lý Công nghiệp</span><i>(Chuyên ngành: Quản lý Công nghiệp, Quản lý Chuỗi Cung ứng & Vận hành)</i></td>
+                <td>90</td>
+                <td>61.08</td>
+            </tr>
+            <tr>
+                <td>225</td>
+                <td><span class="program-name">Nhóm ngành Tài nguyên và Môi trường</span><i>(Ngành: Quản lý Tài nguyên và Môi trường; Kỹ thuật Môi trường)</i></td>
+                <td>30</td>
+                <td>55.46</td>
+            </tr>
+            <tr>
+                <td>228</td>
+                <td><span class="program-name">Logistics và Quản lý Chuỗi Cung ứng</span></td>
+                <td>60</td>
+                <td>73.05</td>
+            </tr>
+            <tr>
+                <td>229</td>
+                <td><span class="program-name">Kỹ thuật Vật liệu</span></td>
+                <td>40</td>
+                <td>55.23</td>
+            </tr>
+            <tr>
+                <td>237</td>
+                <td><span class="program-name">Chuyên ngành Kỹ thuật Y sinh</span><i>(Chuyên ngành của ngành Vật lý Kỹ thuật)</i></td>
+                <td>30</td>
+                <td>64.74</td>
+            </tr>
+            <tr>
+                <td>242</td>
+                <td><span class="program-name">Kỹ thuật Ô tô</span></td>
+                <td>40</td>
+                <td>69.49</td>
+            </tr>
+            <tr>
+                <td>245</td>
+                <td><span class="program-name">Kỹ thuật Hàng không</span></td>
+                <td>40</td>
+                <td>78.79</td>
+            </tr>
+            <tr>
+                <td>251</td>
+                <td><span class="new-program">(Ngành mới) </span><span class="highlight">Khoa học Dữ liệu</span></td>
+                <td>40</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>252</td>
+                <td><span class="new-program">(Ngành mới) </span><span class="highlight">Kỹ thuật Đường sắt</span></td>
+                <td>40</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>253</td>
+                <td><span class="program-name">Chuyên ngành Kinh doanh số</span><i>(Chuyên ngành của ngành Quản trị Kinh doanh)</i></td>
+                <td>40</td>
+                <td>59.06</td>
+            </tr>
+            <tr>
+                <td>254</td>
+                <td><span class="program-name">Chuyên ngành Công nghệ Sinh học số</span><i>(Chuyên ngành của ngành Công nghệ Sinh học)</i></td>
+                <td>40</td>
+                <td>56.42</td>
+            </tr>
+            <tr>
+                <td>255</td>
+                <td><span class="program-name">Chuyên ngành Kinh tế Tuần hoàn</span><i>(Chuyên ngành của ngành Kinh tế Tài nguyên Thiên nhiên)</i></td>
+                <td>30</td>
+                <td>64.38</td>
+            </tr>
+            <tr>
+                <td>256</td>
+                <td><span class="new-program">(Ngành mới) </span><span class="highlight">Kỹ thuật Hạt nhân</span></td>
+                <td>30</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>257</td>
+                <td><span class="program-name">Chuyên ngành Năng lượng Tái tạo</span><i>(Chuyên ngành của ngành Kỹ thuật Điện)</i></td>
+                <td>40</td>
+                <td>58.07</td>
+            </tr>
+            <tr>
+                <td>258</td>
+                <td><span class="program-name">Thiết kế Vi mạch</span></td>
+                <td>40</td>
+                <td>83.09</td>
+            </tr>
+            <tr>
+                <td>259</td>
+                <td><span class="new-program">(Ngành mới) </span><span class="highlight">Kỹ thuật Bán dẫn</span></td>
+                <td>40</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</div>
+
+<script>
+    // Get score from URL parameter
+    const params = new URLSearchParams(window.location.search);
+    const score = parseFloat(params.get('score'));
+    
+    // Display score info
+    const scoreInfo = document.getElementById('score-info');
+    if (!isNaN(score)) {
+        scoreInfo.textContent = `Điểm của bạn: ${score.toFixed(2)}`;
+    } else {
+        scoreInfo.textContent = 'Không có điểm được truyền.';
+        scoreInfo.style.color = '#d32f2f';
+    }
+
+    const filterOptions = document.querySelectorAll('input[name="filter"]');
+
+    function updateTable() {
+        const filterValue = document.querySelector('input[name="filter"]:checked').value;
+        
+        // Get all tbody rows
+        const tbody = document.querySelector('table tbody');
+        const rows = tbody.querySelectorAll('tr');
+
+        rows.forEach(row => {
+            // Skip section header rows
+            if (row.querySelector('.section-header')) {
+                row.classList.remove('hidden');
+                return;
+            }
+
+            // Get the last cell (score cell)
+            const cells = row.querySelectorAll('td');
+            if (cells.length === 0) return;
+            
+            const lastCell = cells[cells.length - 1];
+            const scoreText = lastCell.textContent.trim();
+            const standardScore = parseFloat(scoreText);
+
+            // Reset row styling
+            row.querySelectorAll('td').forEach(cell => {
+                cell.classList.remove('passed', 'failed', 'no-score');
+            });
+
+            // Check if row has no score (score is "-")
+            if (scoreText === '-' || isNaN(standardScore)) {
+                row.querySelectorAll('td').forEach(cell => {
+                    cell.classList.add('no-score');
+                });
+                
+                // Apply filter
+                if (filterValue === 'all') {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+                return;
+            }
+
+            // Determine if passed (compare with passed score)
+            let isPassed = false;
+            if (!isNaN(score)) {
+                isPassed = score >= standardScore;
+                
+                // Apply color
+                row.querySelectorAll('td').forEach(cell => {
+                    if (isPassed) {
+                        cell.classList.add('passed');
+                    } else {
+                        cell.classList.add('failed');
+                    }
+                });
+            }
+
+            // Apply filter
+            if (filterValue === 'all') {
+                row.classList.remove('hidden');
+            } else if (filterValue === 'passed') {
+                row.classList.toggle('hidden', !isPassed || isNaN(score));
+            } else if (filterValue === 'failed') {
+                row.classList.toggle('hidden', isPassed || isNaN(score));
+            }
+        });
+    }
+
+    // Initialize table on load
+    updateTable();
+
+    // Add event listeners for filter changes
+    filterOptions.forEach(option => {
+        option.addEventListener('change', updateTable);
+    });
+</script>
+
+</body>
+</html>
