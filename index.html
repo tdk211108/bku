@@ -195,10 +195,71 @@
                     <div class="score-fill" id="score-fill"></div>
                 </div>
                 <button class="btn-reset" onclick="resetForm()">XÓA</button>
+                <a href="ai_studio_code.html?score=" id="btn-check-programs" class="btn-check-programs" style="display: none; text-decoration: none; margin-left: 20px;">
+                    <button class="btn-check" onclick="event.preventDefault(); goToPrograms()">THAM KHẢO ĐIỂM CHUẨN 2025</button>
+                </a>
             </div>
         </section>
     </div>
 
     <script src="static/script.js"></script>
+    <script>
+        // Load saved form data on page load
+        window.addEventListener('load', () => {
+            const savedData = localStorage.getItem('formData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                Object.keys(data).forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.value = data[id];
+                    }
+                });
+                // Trigger calculation if there's saved data
+                const event = new Event('input', { bubbles: true });
+                document.getElementById('tv')?.dispatchEvent(event);
+            }
+        });
+
+        // Save form data whenever inputs change
+        const inputs = document.querySelectorAll('input[type="number"], input[type="radio"]');
+        inputs.forEach(input => {
+            input.addEventListener('change', () => {
+                const formData = {};
+                inputs.forEach(inp => {
+                    if (inp.type === 'radio') {
+                        if (inp.checked) {
+                            formData[inp.name] = inp.value;
+                        }
+                    } else {
+                        if (inp.value) {
+                            formData[inp.id] = inp.value;
+                        }
+                    }
+                });
+                localStorage.setItem('formData', JSON.stringify(formData));
+            });
+        });
+
+        function goToPrograms() {
+            const finalScore = document.getElementById('final-score').textContent;
+            if (finalScore && finalScore !== '—') {
+                window.location.href = 'ai_studio_code.html?score=' + parseFloat(finalScore);
+            }
+        }
+
+        // Update button visibility when final score changes
+        const observer = new MutationObserver(() => {
+            const finalScore = document.getElementById('final-score').textContent;
+            const btn = document.getElementById('btn-check-programs');
+            if (finalScore && finalScore !== '—') {
+                btn.style.display = 'inline-block';
+            } else {
+                btn.style.display = 'none';
+            }
+        });
+
+        observer.observe(document.getElementById('final-score'), { childList: true, characterData: true, subtree: true });
+    </script>
 </body>
 </html>
