@@ -4,9 +4,9 @@ MIT License - được phép sử dụng, sửa đổi và phân phối
 
 ## 👥 Tác Giả
 
-- **Developer**: dK
-- **Version**: 9.0
-- **Last Update**: 2026
+- **Developer**: Knjr
+- **Version**: 10.0
+- **Last Update**: 4/2026
 
 ## 📞 Liên Hệ
 
