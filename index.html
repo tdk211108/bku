@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[Knjr] Tính điểm BK 9.0</title>
+    <title>[Knjr] Tính điểm Bách Khoa</title>
     <link rel="icon" href="static/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="static/style.css">
 </head>
+
 <body>
     <div class="container">
         <!-- Mini Header -->
@@ -16,7 +18,7 @@
                 <img src="static/favicon.ico" alt="BKU Logo" class="logo-img">
             </div>
             <div class="header-content">
-                <span class="title-text">XÉT TUYỂN BÁCH KHOA TP.HCM</span>
+                <span class="title-text">XÉT TUYỂN BÁCH KHOA 2026</span>
             </div>
         </div>
 
@@ -29,7 +31,7 @@
             <section class="col col-input">
                 <div class="card compact">
                     <h3 class="card-title">Điểm năng lực</h3>
-                    
+
                     <div class="method-selector">
                         <label class="radio-compact">
                             <input type="radio" name="method" value="dgnl" checked>
@@ -72,7 +74,7 @@
                     <!-- IELTS -->
                     <div class="divider"></div>
                     <h3 class="card-title">IELTS</h3>
-                    
+
                     <div class="method-selector">
                         <label class="radio-compact">
                             <input type="radio" name="ielts-option" value="yes">
@@ -96,7 +98,7 @@
                 <!-- TN THPT -->
                 <div class="card compact">
                     <h3 class="card-title">Điểm thi THPT</h3>
-                    
+
                     <div class="form-compact">
                         <label>Toán</label>
                         <input type="number" id="toan-tn" min="0" max="10" step="0.1" placeholder="0-10">
@@ -114,7 +116,7 @@
                 <!-- Học Bạ -->
                 <div class="card compact">
                     <h3 class="card-title">Điểm trung bình học bạ</h3>
-                    
+
                     <div class="subject-compact">
                         <span class="subject-abbr">Toán</span>
                         <input type="number" id="tb-toan-10" min="0" max="10" step="0.1" placeholder="10">
@@ -141,18 +143,18 @@
             <!-- Right: Results -->
             <section class="col col-results">
                 <div class="card compact">
-                    <h3 class="card-title">Điểm XT (sử dụng ĐGNL/SAT)</h3>
-                    
+                    <h3 class="card-title">Điểm xét tuyển (sử dụng ĐGNL/SAT)</h3>
+
                     <div class="result-item">
-                        <span>Năng lực (70%)</span>
+                        <span>Điểm năng lực quy đổi</span>
                         <span class="result-value" id="result-nl-m1">—</span>
                     </div>
                     <div class="result-item">
-                        <span>THPT (20%)</span>
+                        <span>Điểm THPT quy đổi</span>
                         <span class="result-value" id="result-tn-m1">—</span>
                     </div>
                     <div class="result-item">
-                        <span>Học bạ (10%)</span>
+                        <span>Điểm học bạ quy đổi</span>
                         <span class="result-value" id="result-hb-m1">—</span>
                     </div>
                     <div class="result-total">
@@ -162,18 +164,18 @@
                 </div>
 
                 <div class="card compact">
-                    <h3 class="card-title">Điểm XT (chỉ sử dụng điểm thi THPT)</h3>
-                    
+                    <h3 class="card-title">Điểm xét tuyển (sử dụng điểm thi THPT làm điểm năng lực)</h3>
+
                     <div class="result-item">
-                        <span>Năng lực (70%)</span>
+                        <span>Điểm năng lực quy đổi</span>
                         <span class="result-value" id="result-nl-m3">—</span>
                     </div>
                     <div class="result-item">
-                        <span>THPT (20%)</span>
+                        <span>Điểm THPT quy đổi</span>
                         <span class="result-value" id="result-tn-m3">—</span>
                     </div>
                     <div class="result-item">
-                        <span>Học bạ (10%)</span>
+                        <span>Điểm học bạ quy đổi</span>
                         <span class="result-value" id="result-hb-m3">—</span>
                     </div>
                     <div class="result-total">
@@ -188,15 +190,14 @@
         <section class="final-bar">
             <div class="final-content">
                 <div class="score-info">
-                    <span class="score-label">ĐIỂM CUỐI CÙNG</span>
+                    <span class="score-label">ĐIỂM CUỐI CÙNG:</span>
                     <span class="score-value-final" id="final-score">—</span>
                 </div>
-                <div class="score-bar">
-                    <div class="score-fill" id="score-fill"></div>
-                </div>
                 <button class="btn-reset" onclick="resetForm()">XÓA</button>
-                <a href="ai_studio_code.html?score=" id="btn-check-programs" class="btn-check-programs" style="display: none; text-decoration: none; margin-left: 20px;">
-                    <button class="btn-check" onclick="event.preventDefault(); goToPrograms()">THAM KHẢO ĐIỂM CHUẨN 2025</button>
+                <a href="ai_studio_code.html?score=" id="btn-check-programs" class="btn-check-programs"
+                    style="display: none; text-decoration: none; margin-left: 20px;">
+                    <button class="btn-check" onclick="event.preventDefault(); goToPrograms()">THAM KHẢO ĐIỂM CHUẨN
+                        2025</button>
                 </a>
             </div>
         </section>
@@ -216,7 +217,7 @@
                     }
                 });
                 // Trigger calculation if there's saved data
-                const event = new Event('input', { bubbles: true });
+                const event = new Event('input', {bubbles: true});
                 document.getElementById('tv')?.dispatchEvent(event);
             }
         });
@@ -259,7 +260,8 @@
             }
         });
 
-        observer.observe(document.getElementById('final-score'), { childList: true, characterData: true, subtree: true });
+        observer.observe(document.getElementById('final-score'), {childList: true, characterData: true, subtree: true});
     </script>
 </body>
+
 </html>
