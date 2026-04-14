@@ -20,7 +20,16 @@ const STORAGE_KEYS = {
     TB_LY: 'tb_ly',
     TB_ANH: 'tb_anh',
     IELTS: 'ielts',
-    IELTS_OPTION: 'ielts_option'
+    IELTS_OPTION: 'ielts_option',
+    TV: 'tv',
+    TA: 'ta',
+    TOAN_DGNL: 'toan_dgnl',
+    TD: 'td',
+    SAT: 'sat_score',
+    TOAN_TN: 'toan_tn',
+    LY_TN: 'ly_tn',
+    ANH_TN: 'anh_tn',
+    METHOD: 'method'
 };
 
 // ==================== DEBOUNCE FUNCTION ====================
@@ -56,7 +65,7 @@ function initializeEventListeners() {
             debounce(calculateResults, 150);
         });
         input.addEventListener('input', saveToLocalStorage);
-        
+
         // Enter key to move to next input
         input.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
@@ -80,18 +89,18 @@ function setupAutoCalculation() {
 
 // ==================== TOGGLE METHODS ====================
 function toggleMethod(e) {
-    const method = e.target.value;
-    
+    const method = e ? e.target.value : (document.querySelector('input[name="method"]:checked')?.value || 'dgnl');
+
     document.getElementById('dgnl-form').classList.toggle('active', method === 'dgnl');
     document.getElementById('sat-form').classList.toggle('active', method === 'sat');
-    
+
     debounce(calculateResults, 150);
 }
 
 function toggleIELTS(e) {
-    const hasIELTS = e.target.value === 'yes';
+    const hasIELTS = (e ? e.target.value : (document.querySelector('input[name="ielts-option"]:checked')?.value || 'no')) === 'yes';
     document.getElementById('ielts-input').style.display = hasIELTS ? 'block' : 'none';
-    
+
     if (hasIELTS) {
         document.getElementById('anh-tn').disabled = true;
         document.querySelectorAll('[id^="tb-anh-"]').forEach(el => el.disabled = true);
@@ -99,7 +108,7 @@ function toggleIELTS(e) {
         document.getElementById('anh-tn').disabled = false;
         document.querySelectorAll('[id^="tb-anh-"]').forEach(el => el.disabled = false);
     }
-    
+
     debounce(calculateResults, 150);
 }
 
@@ -195,7 +204,7 @@ function calculateResults() {
     // Validate inputs first
     const validationErrors = validateInputs();
     showValidationError(validationErrors);
-    
+
     if (validationErrors.length > 0) {
         // Clear results if there are validation errors
         document.getElementById('result-nl-m1').textContent = '—';
@@ -213,7 +222,7 @@ function calculateResults() {
     try {
         // Get method selection
         const method = document.querySelector('input[name="method"]:checked').value;
-        
+
         // Calculate diem_nl (Năng lực)
         let diem_nl = 0;
         if (method === 'dgnl') {
@@ -221,7 +230,7 @@ function calculateResults() {
             const ta = parseFloat(document.getElementById('ta').value) || 0;
             const toan_dgnl = parseFloat(document.getElementById('toan-dgnl').value) || 0;
             const td = parseFloat(document.getElementById('td').value) || 0;
-            
+
             diem_nl = (toan_dgnl * 2 + tv + ta + td) / 15;
         } else {
             const sat = parseInt(document.getElementById('sat-score').value) || 0;
@@ -231,7 +240,7 @@ function calculateResults() {
         // Get IELTS and calculate diem_anh
         let diem_anh = null;
         const ieltsOption = document.querySelector('input[name="ielts-option"]:checked').value;
-        
+
         if (ieltsOption === 'yes') {
             const ielts = parseFloat(document.getElementById('ielts').value);
             if (ielts >= 6 && ielts <= 9) {
@@ -244,7 +253,7 @@ function calculateResults() {
         const toan_tn = parseFloat(document.getElementById('toan-tn').value) || 0;
         const ly_tn = parseFloat(document.getElementById('ly-tn').value) || 0;
         let anh_tn = parseFloat(document.getElementById('anh-tn').value) || 0;
-        
+
         // If IELTS is used, update anh_tn
         if (diem_anh !== null && ieltsOption === 'yes') {
             anh_tn = diem_anh;
@@ -258,7 +267,7 @@ function calculateResults() {
         const tb_toan = calculateTB('toan');
         const tb_ly = calculateTB('ly');
         let tb_anh = 0;
-        
+
         if (ieltsOption === 'yes' && diem_anh !== null) {
             tb_anh = diem_anh;
         } else {
@@ -285,7 +294,7 @@ function calculateResults() {
 
 function calculateTB(subject) {
     let k10 = 0, k11 = 0, k12 = 0;
-    
+
     if (subject === 'toan') {
         k10 = parseFloat(document.getElementById('tb-toan-10').value) || 0;
         k11 = parseFloat(document.getElementById('tb-toan-11').value) || 0;
@@ -299,7 +308,7 @@ function calculateTB(subject) {
         k11 = parseFloat(document.getElementById('tb-anh-11').value) || 0;
         k12 = parseFloat(document.getElementById('tb-anh-12').value) || 0;
     }
-    
+
     return (k10 + k11 + k12) / 3;
 }
 
@@ -343,11 +352,51 @@ function updateFinalScore(total1, total3) {
 
     if (isNaN(final) || final === 0) {
         finalScoreEl.textContent = '—';
-        scoreBarEl.style.width = '0%';
+        finalScoreEl.classList.remove('rainbow');
+        finalScoreEl.style.color = '';
+        finalScoreEl.style.animation = '';
+        finalScoreEl.style.textShadow = '';
+        if (scoreBarEl) {
+            scoreBarEl.style.background = '';
+            scoreBarEl.style.backgroundSize = '';
+            scoreBarEl.style.animation = '';
+            scoreBarEl.style.boxShadow = '';
+        }
     } else {
         finalScoreEl.textContent = final.toFixed(2);
-        const percentage = Math.min((final / 100) * 100, 100);
-        scoreBarEl.style.width = percentage + '%';
+
+        if (final >= 87) {
+            // Rainbow mode — CSS animation handles color + glow
+            finalScoreEl.classList.add('rainbow');
+            finalScoreEl.style.color = '';
+            finalScoreEl.style.textShadow = '';
+            finalScoreEl.style.animation = '';
+            if (scoreBarEl) {
+                scoreBarEl.style.background = 'linear-gradient(90deg, #ff0000, #ffff00, #00ff88, #00ffff, #aa00ff, #ff0066, #ff0000)';
+                scoreBarEl.style.backgroundSize = '200% 100%';
+                scoreBarEl.style.animation = 'rainbow-bar 3s linear infinite';
+                scoreBarEl.style.boxShadow = '0 0 20px rgba(255,255,255,0.4)';
+            }
+        } else {
+            finalScoreEl.classList.remove('rainbow');
+            finalScoreEl.style.animation = '';
+            let r, g, b;
+            if (final >= 80) {
+                r = 0; g = 220; b = 100;
+            } else if (final >= 74) {
+                r = 255; g = 220; b = 0;
+            } else {
+                r = 255; g = 60; b = 60;
+            }
+            finalScoreEl.style.color = `rgb(${r}, ${g}, ${b})`;
+            finalScoreEl.style.textShadow = `0 0 20px rgba(${r},${g},${b},0.9), 0 0 50px rgba(${r},${g},${b},0.5), 0 0 80px rgba(${r},${g},${b},0.3)`;
+            if (scoreBarEl) {
+                scoreBarEl.style.background = `linear-gradient(90deg, rgba(${r},${g},${b},0.4), rgba(${r},${g},${b},0.7), rgba(${r},${g},${b},0.4))`;
+                scoreBarEl.style.backgroundSize = '';
+                scoreBarEl.style.animation = '';
+                scoreBarEl.style.boxShadow = `0 0 20px rgba(${r},${g},${b},0.4)`;
+            }
+        }
     }
 }
 
@@ -364,6 +413,22 @@ function saveToLocalStorage() {
         // Save IELTS
         localStorage.setItem(STORAGE_KEYS.IELTS, document.getElementById('ielts').value);
         localStorage.setItem(STORAGE_KEYS.IELTS_OPTION, document.querySelector('input[name="ielts-option"]:checked').value);
+
+        // Save ĐGNL / SAT inputs
+        localStorage.setItem(STORAGE_KEYS.TV, document.getElementById('tv').value);
+        localStorage.setItem(STORAGE_KEYS.TA, document.getElementById('ta').value);
+        localStorage.setItem(STORAGE_KEYS.TOAN_DGNL, document.getElementById('toan-dgnl').value);
+        localStorage.setItem(STORAGE_KEYS.TD, document.getElementById('td').value);
+        localStorage.setItem(STORAGE_KEYS.SAT, document.getElementById('sat-score').value);
+
+        // Save TN THPT inputs
+        localStorage.setItem(STORAGE_KEYS.TOAN_TN, document.getElementById('toan-tn').value);
+        localStorage.setItem(STORAGE_KEYS.LY_TN, document.getElementById('ly-tn').value);
+        localStorage.setItem(STORAGE_KEYS.ANH_TN, document.getElementById('anh-tn').value);
+
+        // Save method selection
+        const checkedMethod = document.querySelector('input[name="method"]:checked');
+        if (checkedMethod) localStorage.setItem(STORAGE_KEYS.METHOD, checkedMethod.value);
 
     } catch (error) {
         console.error('Error saving to localStorage:', error);
@@ -386,17 +451,36 @@ function loadFromLocalStorage() {
         // Load IELTS
         const ielts = localStorage.getItem(STORAGE_KEYS.IELTS);
         const ieltsOption = localStorage.getItem(STORAGE_KEYS.IELTS_OPTION);
+        if (ielts) document.getElementById('ielts').value = ielts;
+        if (ieltsOption) document.querySelector(`input[name="ielts-option"][value="${ieltsOption}"]`).checked = true;
+        toggleIELTS();
 
-        if (ielts) {
-            document.getElementById('ielts').value = ielts;
+        // Load ĐGNL / SAT inputs
+        const tv = localStorage.getItem(STORAGE_KEYS.TV);
+        const ta = localStorage.getItem(STORAGE_KEYS.TA);
+        const toanDgnl = localStorage.getItem(STORAGE_KEYS.TOAN_DGNL);
+        const td = localStorage.getItem(STORAGE_KEYS.TD);
+        const sat = localStorage.getItem(STORAGE_KEYS.SAT);
+        if (tv) document.getElementById('tv').value = tv;
+        if (ta) document.getElementById('ta').value = ta;
+        if (toanDgnl) document.getElementById('toan-dgnl').value = toanDgnl;
+        if (td) document.getElementById('td').value = td;
+        if (sat) document.getElementById('sat-score').value = sat;
+
+        // Load TN THPT inputs
+        const toanTn = localStorage.getItem(STORAGE_KEYS.TOAN_TN);
+        const lyTn = localStorage.getItem(STORAGE_KEYS.LY_TN);
+        const anhTn = localStorage.getItem(STORAGE_KEYS.ANH_TN);
+        if (toanTn) document.getElementById('toan-tn').value = toanTn;
+        if (lyTn) document.getElementById('ly-tn').value = lyTn;
+        if (anhTn) document.getElementById('anh-tn').value = anhTn;
+
+        // Load method selection
+        const method = localStorage.getItem(STORAGE_KEYS.METHOD);
+        if (method) {
+            const radio = document.querySelector(`input[name="method"][value="${method}"]`);
+            if (radio) { radio.checked = true; toggleMethod(); }
         }
-
-        if (ieltsOption) {
-            document.querySelector(`input[name="ielts-option"][value="${ieltsOption}"]`).checked = true;
-        }
-
-        // Trigger toggleIELTS to update fields
-        toggleIELTS({ target: document.querySelector('input[name="ielts-option"]:checked') });
 
     } catch (error) {
         console.error('Error loading from localStorage:', error);
@@ -405,34 +489,24 @@ function loadFromLocalStorage() {
 
 // ==================== RESET FORM ====================
 function resetForm() {
-    // Ask for confirmation
-    if (!confirm('Bạn có chắc muốn xóa dữ liệu nhập liệu?\n(Học bạ và IELTS sẽ được giữ lại)')) {
-        return;
-    }
+    // Clear all inputs
+    document.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
 
-    // Clear method selection inputs
-    document.getElementById('tv').value = '';
-    document.getElementById('ta').value = '';
-    document.getElementById('toan-dgnl').value = '';
-    document.getElementById('td').value = '';
-    document.getElementById('sat-score').value = '';
-
-    // Clear TN THPT inputs
-    document.getElementById('anh-tn').value = '';
-    document.getElementById('toan-tn').value = '';
-    document.getElementById('ly-tn').value = '';
+    // Reset IELTS option to không
+    document.querySelector('input[name="ielts-option"][value="no"]').checked = true;
+    toggleIELTS();
 
     // Reset method to ĐGNL
-    document.getElementById('dgnl-form').classList.add('active');
-    document.getElementById('sat-form').classList.remove('active');
     document.querySelector('input[name="method"][value="dgnl"]').checked = true;
+    toggleMethod();
+
+    // Clear localStorage
+    localStorage.clear();
 
     // Show reset animation
     const container = document.querySelector('.container');
     container.style.opacity = '0.8';
-    setTimeout(() => {
-        container.style.opacity = '1';
-    }, 200);
+    setTimeout(() => { container.style.opacity = '1'; }, 200);
 
     // Recalculate
     calculateResults();
@@ -454,20 +528,18 @@ document.querySelectorAll('input[type="number"]').forEach(input => {
     });
 });
 
-// Auto-save on any change with debounce
+// Auto-save on any input change
 let saveTimeout;
-document.querySelectorAll('input[type="number"]').forEach(input => {
+document.querySelectorAll('input').forEach(input => {
     input.addEventListener('input', function() {
         clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(() => {
-            saveToLocalStorage();
-        }, 500);
+        saveTimeout = setTimeout(saveToLocalStorage, 500);
+    });
+    input.addEventListener('change', function() {
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(saveToLocalStorage, 500);
     });
 });
 
-// Auto-save IELTS option
-document.querySelectorAll('input[name="ielts-option"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-        localStorage.setItem(STORAGE_KEYS.IELTS_OPTION, this.value);
-    });
-});
+// Save everything before leaving the page
+window.addEventListener('beforeunload', saveToLocalStorage);
